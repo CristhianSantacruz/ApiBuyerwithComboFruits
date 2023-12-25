@@ -2,6 +2,7 @@ package com.buyerfruits.buyercombofruits.controllers;
 
 
 import com.buyerfruits.buyercombofruits.models.BuyerEntity;
+import com.buyerfruits.buyercombofruits.models.dto.BuyerDto;
 import com.buyerfruits.buyercombofruits.service.IBuyerService;
 import com.buyerfruits.buyercombofruits.service.imp.BuyerService;
 import org.springframework.http.HttpStatus;
@@ -34,8 +35,12 @@ public class BuyerController {
         return ResponseEntity.status(HttpStatus.OK).body(buyerEntity.get());
     }
     @PostMapping("/save")
-    public void save(@RequestBody BuyerEntity buyerEntity){
+    public void save(@RequestBody BuyerDto buyerDto){
 
-        buyerService.save(buyerEntity);
+        buyerService.save(BuyerEntity.builder()
+                .name(buyerDto.getName())
+                .dni(buyerDto.getDni())
+                .email(buyerDto.getEmail()).build()
+        );
     }
 }

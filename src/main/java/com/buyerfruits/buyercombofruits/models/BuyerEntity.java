@@ -14,7 +14,7 @@ import java.util.*;
 @Data
 @Getter
 @Setter
-
+@Builder
 @Entity
 @Table(name="tb_buyer")
 public class BuyerEntity {
