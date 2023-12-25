@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Data
 @Setter
 @Getter
+@Builder
 
 @Entity
 @Table(name = "tb_fruit")

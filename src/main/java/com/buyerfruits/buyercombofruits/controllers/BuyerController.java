@@ -4,11 +4,11 @@ package com.buyerfruits.buyercombofruits.controllers;
 import com.buyerfruits.buyercombofruits.models.BuyerEntity;
 import com.buyerfruits.buyercombofruits.models.dto.BuyerDto;
 import com.buyerfruits.buyercombofruits.service.IBuyerService;
-import com.buyerfruits.buyercombofruits.service.imp.BuyerService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -22,17 +22,36 @@ public class BuyerController {
     }
 
     @GetMapping("/all")
-    public ResponseEntity<?> findByAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(buyerService.findAll());
+    public ResponseEntity<Object> findByAll(){
+
+        List<BuyerDto> buyerDtoList = buyerService.findAll()
+                .stream()
+                .map(buyer-> BuyerDto.builder()
+                        .name(buyer.getName())
+                        .id(buyer.getId())
+                        .email(buyer.getEmail())
+                        .dni(buyer.getDni())
+                        .comboEntities(buyer.getComboEntities())
+                        .build()).toList();
+        return ResponseEntity.ok(buyerDtoList);
     }
 
     @GetMapping("/search/{id}")
-    public ResponseEntity<?> findById(@PathVariable(name="id") Long id){
+    public ResponseEntity<Object> findById(@PathVariable(name="id") Long id){
         Optional<BuyerEntity> buyerEntity = buyerService.findById(id);
         if(buyerEntity.isEmpty()){
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Buyer not found");
         }
-        return ResponseEntity.status(HttpStatus.OK).body(buyerEntity.get());
+        BuyerEntity buyer = buyerEntity.get();
+        BuyerDto buyerDto = BuyerDto.builder()
+                .id(buyer.getId())
+                .name(buyer.getName())
+                .email(buyer.getEmail())
+                .dni(buyer.getDni())
+                .comboEntities(buyer.getComboEntities()).build();
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(buyerDto);
     }
     @PostMapping("/save")
     public void save(@RequestBody BuyerDto buyerDto){

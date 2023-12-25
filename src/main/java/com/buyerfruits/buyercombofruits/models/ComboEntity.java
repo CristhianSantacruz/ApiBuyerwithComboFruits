@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @Getter
 @Setter
-
+@Builder
 @Entity
 @Table(name="tb_combos")
 public class ComboEntity {
