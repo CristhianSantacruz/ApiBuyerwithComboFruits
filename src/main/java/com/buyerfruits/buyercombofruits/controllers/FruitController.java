@@ -1,12 +1,11 @@
 package com.buyerfruits.buyercombofruits.controllers;
-
-import com.buyerfruits.buyercombofruits.models.ComboEntity;
 import com.buyerfruits.buyercombofruits.models.FruitEntity;
+import com.buyerfruits.buyercombofruits.models.dto.FruitDto;
 import com.buyerfruits.buyercombofruits.service.imp.FruitService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -16,12 +15,23 @@ public class FruitController {
     private final FruitService fruitService;
 
     public FruitController(FruitService fruitService){
+
         this.fruitService = fruitService;
     }
 
     @GetMapping("/all")
     public ResponseEntity<?> findByAll(){
-        return ResponseEntity.status(HttpStatus.OK).body(fruitService.findAll());
+
+        List<FruitDto> fruitDtoList = fruitService.findAll()
+                .stream()
+                .map(fruit -> FruitDto.builder()
+                        .name(fruit.getName())
+                        .id(fruit.getId())
+                        .price(fruit.getPrice())
+                        .combo(fruit.getCombo()).build()).toList();
+
+
+        return ResponseEntity.status(HttpStatus.OK).body(fruitDtoList);
     }
 
     @GetMapping("/search/{id}")
@@ -32,12 +42,23 @@ public class FruitController {
 
         }
         else{
-            return ResponseEntity.status(HttpStatus.OK).body(fruitService.findById(id));
+            FruitDto fruitDto = FruitDto.builder()
+                    .id(comboEntity.get().getId())
+                    .name(comboEntity.get().getName())
+                    .combo(comboEntity.get().getCombo())
+                    .build();
+            return ResponseEntity.status(HttpStatus.OK).body(fruitDto);
         }
     }
 
     @PostMapping("/save")
-    public void save(@RequestBody FruitEntity fruitEntity){
+    public void save(@RequestBody FruitDto fruitDto){
+
+        FruitEntity fruitEntity = FruitEntity.builder()
+                        .name(fruitDto.getName())
+                                .price(fruitDto.getPrice())
+                                        .combo(fruitDto.getCombo()).build();
+
         fruitService.save(fruitEntity);
     }
 }
