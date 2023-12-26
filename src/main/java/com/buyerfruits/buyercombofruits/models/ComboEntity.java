@@ -1,8 +1,6 @@
 package com.buyerfruits.buyercombofruits.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,10 +27,11 @@ public class ComboEntity {
     @OneToMany(mappedBy = "combo",
                cascade = CascadeType.ALL,
                fetch = FetchType.LAZY,orphanRemoval = true)
+    @JsonManagedReference
     private List<FruitEntity> fruits = new ArrayList<>();
 
     @ManyToMany(mappedBy = "comboEntities", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
     private List<BuyerEntity> buyerEntityList = new ArrayList<>();
 
 

@@ -1,5 +1,8 @@
 package com.buyerfruits.buyercombofruits.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -23,6 +26,7 @@ public class FruitEntity {
     private BigDecimal price;
 
     @ManyToOne
-    @JoinColumn(name= "id_buyer",nullable = false)
+    @JoinColumn(name= "id_combo",nullable = false)
+    @JsonBackReference
     private ComboEntity combo;
 }
